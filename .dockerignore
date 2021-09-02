@@ -1,0 +1,13 @@
+backend/.idea
+backend/config.ini
+backend/db.sqlite3
+backend/static/
+.idea/
+.git/
+Dockerfile
+.gitlab-ci.yml
+.gitattributes
+.gitignore
+config.ini
+README.md
+docker-compose.yaml

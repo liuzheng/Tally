@@ -1,6 +1,17 @@
-version: '3'
+version: '3.5'
+
 services:
-  service:
+  nginx:
+    image: nginx
+    ports:
+      - 8000:80
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - app:/opt/app
+
+  backend:
     image: liuzheng/tally
     restart: on-failure
     healthcheck:
@@ -8,8 +19,13 @@ services:
       interval: 30s
       timeout: 1s
       retries: 1
+    volumes:
+      - app:/opt/app
+      - ./config.ini:/opt/app/config.ini
     build:
       context: .
       dockerfile: Dockerfile
       args:
         example: 1
+volumes:
+  app:
