@@ -1,11 +1,11 @@
-from rest_framework import serializers
+from django.http import HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-import uuid
 from management.mixins import MixinViewSet
 from management.utils.csrf import CsrfExemptSessionAuthentication
+from django.db.migrations.recorder import MigrationRecorder
 
 
 class InstallView(MixinViewSet):
@@ -20,8 +20,5 @@ class InstallView(MixinViewSet):
         },
     )
     def get(self, request, format=None):
-        reply = {
-            'success': False,
-            'message': "unknown error"
-        }
-        return Response(reply, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        MigrationRecorder.Migration.objects.all().count()
+        return HttpResponseRedirect('/')
