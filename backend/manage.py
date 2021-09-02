@@ -2,6 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
+import configparser
 
 
 def main():
@@ -16,7 +18,16 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     if sys.argv[1] == "runserver":
-        execute_from_command_line(['manage.py', 'migrate'])
+        BASE_DIR = Path(__file__).resolve().parent
+        if not os.path.isfile(os.path.join(BASE_DIR, 'config.ini')):
+            print("Please create config.ini first")
+            exit(1)
+        CONFIG = configparser.RawConfigParser()
+        CONFIG.read(os.path.join(BASE_DIR, 'config.ini'))
+        if 'DJANGO' not in CONFIG:
+            exit(1)
+        if not CONFIG.get('DJANGO', 'MANUAL_MIGRATE', fallback=False):
+            execute_from_command_line(['manage.py', 'migrate'])
     execute_from_command_line(sys.argv)
 
 
